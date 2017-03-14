@@ -314,9 +314,9 @@ cost of `isPrime` is now 0. (A mock of `Primeness` could be injected to test
 The cost of construction is added to the cost of testing the class. (You can 
 only test a class which you can construct). In order to compute the cost we go 
 through several phases:
-  # Compute the cost of the constructor, giving zero cost to injectable variables 
-  # Look for setter methods and use those to mark more fields as injectable.
-  # Compute the cost of the method while respecting the injectability of fields, and method parameters.
+  * Compute the cost of the constructor, giving zero cost to injectable variables 
+  * Look for setter methods and use those to mark more fields as injectable.
+  * Compute the cost of the method while respecting the injectability of fields, and method parameters.
 
 
 ## Injectability

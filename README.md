@@ -124,10 +124,10 @@ An example score for a method is:
   `package.Class.methodName()V[1, 2 / 3, 4]`
 
 The four numbers, in order, represent this method's:
-  * _Testability Complexity_:
-  * _Global State Complexity_:
-  * _Total Testability Complexity_:
-  * _Total Global State Complexity_: 
+  * _Testability Complexity_
+  * _Global State Complexity_
+  * _Total Testability Complexity_
+  * _Total Global State Complexity_ 
 
 ## Simplest Example
 Let's start with a simple example of analyzing a simple class.
@@ -144,7 +144,7 @@ public class Primeness {
   }
 }
 ```
-*TRY IT:
+*TRY IT:*
    `testability.sh -printDepth 10 com.google.test.metric.example.Lessons.Primeness`
 
 *OUTPUT:*
@@ -172,8 +172,7 @@ Key:
 Analyzed 1 classes (plus non-whitelisted external dependencies)
 ```
 
-## EXPLANATION:
-
+## EXPLANATION
 In the above example the test complexity is 2. This is because the
 method `isPrime` has a loop and an `if` statement. Therefore there are 2
 additional paths of execution for a total of 3.
@@ -213,10 +212,10 @@ public class SumOfPrimes1 {
 }
 ```
 
-*TRY IT:*
+*TRY IT*
    `testability.sh -printDepth 10 com.google.test.metric.example.Lessons.SumOfPrimes1`
 
-*OUTPUT:*
+*OUTPUT*
 ```
 -----------------------------------------
 Packages/Classes To Enter: 
@@ -242,7 +241,7 @@ Key:
 Analyzed 1 classes (plus non-whitelisted external dependencies)
 ```
 
-The testability and global state costs for the constructor (indicated by <init>)
+The testability and global state costs for the constructor (indicated by `<init>`)
 is zero. 
 
 The testability complexity of `sum` is 2, and the total testability complexity
@@ -278,10 +277,10 @@ public class SumOfPrimes2 {
 }
 ```
 
-*TRY IT:*
+*TRY IT*
    `testability.sh -printDepth 10 com.google.test.metric.example.Lessons.SumOfPrimes2`
 
-*OUTPUT:*
+*OUTPUT*
 ```
 -----------------------------------------
 Packages/Classes To Enter: 
@@ -337,7 +336,7 @@ test. This makes it so that tests can pass by themselves but fail when run in
 a suite. It is also possible to make tests which will run in only a specific
 order.
 
-*SOURCE:*
+*SOURCE*
 ```java
 package com.google.test.metric.example;
 
@@ -387,10 +386,10 @@ public class GlobalExample {
 }
 ```
 
-*TRY IT:*
+*TRY IT*
    `testability.sh -printDepth 10 com.google.test.metric.example.GlobalExample com.google.test.metric.example.GlobalExample`
 
-*OUTPUT:*
+*OUTPUT*
 
 ```
 -----------------------------------------

@@ -60,8 +60,14 @@ import com.google.test.metric.method.op.stack.Store;
 import com.google.test.metric.method.op.stack.Swap;
 import com.google.test.metric.method.op.stack.Throw;
 import com.google.test.metric.method.op.stack.Transform;
+import java.util.Arrays;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import org.objectweb.asm.Handle;
+import static org.objectweb.asm.Opcodes.ASM5;
 
-public class MethodVisitorBuilder implements MethodVisitor {
+public class MethodVisitorBuilder extends MethodVisitor {
 
   private final ClassInfo classInfo;
   private final String name;
@@ -85,6 +91,7 @@ public class MethodVisitorBuilder implements MethodVisitor {
   public MethodVisitorBuilder(ClassRepository repository, ClassInfo classInfo,
       String name, String desc, String signature, String[] exceptions,
       boolean isStatic, boolean isFinal, Visibility visibility) {
+      super(ASM5);
     this.repository = repository;
     this.classInfo = classInfo;
     this.name = name;
@@ -405,6 +412,38 @@ public class MethodVisitorBuilder implements MethodVisitor {
       }
     });
   }
+
+    @Override
+    public void visitInvokeDynamicInsn(String name, String desc, Handle bsm, Object... os) {
+        SignatureParser signature = parse(desc);
+        final List<Type> params = signature.getParameters();
+        final Type returnType = signature.getReturnType();
+        //System.out.println("params are " + params.stream().map(String::valueOf).collect(Collectors.joining("_")) + " with return type " + returnType);
+        recorder.add(new Runnable() {
+        public void run() {
+          String className = namer.nameClass(bsm.getOwner());
+          //@TODO see if this is right for InvokeDynamic
+          final boolean isInvokeStatic=true;//@TODO identify invokedynamic as in Invoke
+          block.addOp(new Invoke(lineNumber, className, namer.nameMethod(className, name, desc),
+              params, isInvokeStatic, returnType));
+        }
+      });
+    }
+
+    @Override
+    public void visitMethodInsn(final int opcode, final String clazz,
+      final String name, final String desc, boolean isInterface) {
+        SignatureParser signature = parse(desc);
+    final List<Type> params = signature.getParameters();
+    final Type returnType = signature.getReturnType();
+    recorder.add(new Runnable() {
+      public void run() {
+        String className = namer.nameClass(clazz);
+        block.addOp(new Invoke(lineNumber, className, namer.nameMethod(className, name, desc),
+            params, opcode == Opcodes.INVOKESTATIC, returnType));
+      }
+    });
+    }
 
   public void visitLdcInsn(final Object cst) {
     recorder.add(new Runnable() {
@@ -818,16 +857,7 @@ public class MethodVisitorBuilder implements MethodVisitor {
 
   public void visitMethodInsn(final int opcode, final String clazz,
       final String name, final String desc) {
-    SignatureParser signature = parse(desc);
-    final List<Type> params = signature.getParameters();
-    final Type returnType = signature.getReturnType();
-    recorder.add(new Runnable() {
-      public void run() {
-        String className = namer.nameClass(clazz);
-        block.addOp(new Invoke(lineNumber, className, namer.nameMethod(className, name, desc),
-            params, opcode == Opcodes.INVOKESTATIC, returnType));
-      }
-    });
+      visitMethodInsn(opcode, clazz, name, desc, false);
   }
 
   public AnnotationVisitor visitAnnotation(String arg0, boolean arg1) {

@@ -45,6 +45,7 @@ import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import static java.text.MessageFormat.format;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -132,7 +133,7 @@ public class HtmlReportTest extends TestCase {
     String text = out.toString();
     ResourceBundle bundle = ResourceBundle.getBundle("messages");
     String expected =
-        format(bundle.getString("report.explain.class.hardToTest"), "<tt>", "classFoo", "</tt>");
+        MessageFormat.format(bundle.getString("report.explain.class.hardToTest"), "<tt>", "classFoo", "</tt>");
     assertTrue(text, text.contains(expected));
   }
 }

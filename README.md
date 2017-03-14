@@ -1,14 +1,14 @@
-#summary Readme first
-=Testability Metric Explained=
+# summary - Readme first
+## Testability Metric Explained
 
-==Basic Idea==
+### Basic Idea
 The testability score represents the difficulty of testing a particular
 piece of code. The difficulty is a measure of:
-  # how hard it will be to construct this object
-  # how hard will it be to execute the method in order to be able to assert something in a test.
+  * how hard it will be to construct this object
+  * how hard will it be to execute the method in order to be able to assert something in a test.
 
-==How to run it==
-{{{
+## How to run it
+```
 $ testability.sh 
 Argument "classes and packages" is required
 
@@ -31,21 +31,21 @@ Argument "classes and packages" is required
                                          ing weighted average. This represents the weight of the cyclomatic cost.
  global global state cost multiplier   : When computing the overall cost of the method the individual costs are added us
                                          ing weighted average. This represents the weight of the global state cost.
-}}}
+```
 
 
-==Output Format==
+## Output Format
 
 There are two kinds of output format: summary and detail
 
-=== Output Format: summary ===
+### Output Format: summary
 
 Use the summary mode to get a quick overview of the project. This example shows what running the testability metric
 on itself produces. The top shows statistical breakdown of "Excellent", "Good" and "Needs work" classes.
 It is followed by a breakdown chart showing the breakdown visually. A more detailed breakdown is shown in the
 histogram. Finally the list of 20 highest offending classes is shown sorted by test difficulty.
 
-{{{
+```
 $ testability.sh -print summary com.google.test.metric -whitelist com.google.test.org.objectweb.asm.
       Analyzed classes:   125
  Excellent classes (.):   123  98.4%
@@ -101,13 +101,13 @@ com.google.test.metric.asm.SignatureParser 12
 com.google.test.metric.asm.SignatureParser$TypeVisitor 12
 com.google.test.metric.report.TextReport 12
 com.google.test.metric.asm.MethodVisitorBuilder$7 10
-}}}
+```
 
-=== Output Format: detail ===
+### Output Format: detail
 
 To get a more in depth view of view a particular class has a high cost use the detail output format.
 
-{{{
+```
 $ testability.sh -print detail com.google.test.metric.example.Lessons.Primeness
 -----------------------------------------
 Packages/Classes To Enter: 
@@ -118,22 +118,21 @@ Min Class Cost: 1
 
 Testability cost for com.google.test.metric.example.Lessons.Primeness [ cost = 2 ] [ 2 TCC, 0 TGC ]
   com.google.test.metric.example.Lessons.Primeness.isPrime(I)Z [2, 0 / 2, 0]
-}}}
+```
 
 An example score for a method is:
   `package.Class.methodName()V[1, 2 / 3, 4]`
 
 The four numbers, in order, represent this method's:
-  # _Testability Complexity_:
-  # _Global State Complexity_:
-  # _Total Testability Complexity_:
-  # _Total Global State Complexity_: 
+  * _Testability Complexity_:
+  * _Global State Complexity_:
+  * _Total Testability Complexity_:
+  * _Total Global State Complexity_: 
 
-==Simplest Example==
+## Simplest Example
 Let's start with a simple example of analyzing a simple class.
 
-*SOURCE:*
-{{{
+```java
 public class Primeness {
   public boolean isPrime(int number) {
     for (int i = 2; i < number / 2; i++) {
@@ -144,12 +143,12 @@ public class Primeness {
     return true;
   }
 }
-}}}
+```
 *TRY IT:
    `testability.sh -printDepth 10 com.google.test.metric.example.Lessons.Primeness`
 
 *OUTPUT:*
-{{{
+```
 -----------------------------------------
 Packages/Classes To Enter: 
  com.google.test.metric.example.Lessons.Primeness*
@@ -171,16 +170,16 @@ Key:
  TGC: Total Global Cost
 
 Analyzed 1 classes (plus non-whitelisted external dependencies)
-}}}
+```
 
-*EXPLANATION:*
+## EXPLANATION:
 
 In the above example the test complexity is 2. This is because the
 method `isPrime` has a loop and an `if` statement. Therefore there are 2
 additional paths of execution for a total of 3.
- # Loop does not execute
- # Loop executes but if does not evaluate to true
- # Loop executes and if evaluates to true.
+ 1. Loop does not execute
+ 1. Loop executes but if does not evaluate to true
+ 1. Loop executes and if evaluates to true.
 
 *Note:* Test cost is the method's cyclomatic complexity minus one. Subtract one
 to not penalize the method for decomposing the method into 2 smaller methods. 
@@ -188,7 +187,7 @@ to not penalize the method for decomposing the method into 2 smaller methods.
 the cost of 2.) The simplest method's score is 0 such that the method can be
 split into smaller methods with no penalty.
 
-==Example: Injectability Scoring==
+## Example: Injectability Scoring
 This example shows the differences in scores based on how injectable a class is.
 `SumOfPrimes1` directly instantiates a `new Primeness()`. The `new` operator
 prevents you from being able to inject in a different subclass of `Primeness`
@@ -196,8 +195,7 @@ for testing. Thus the scores differ:
   * `sum(I)I[2, 0 / 4, 0]` <- total test complexity of 4 for `SumOfPrimes1`
   * `sum(I)I[2, 0 / 2, 0]` <- total test complexity of 2 for `SumOfPrimes2`
 
-*SOURCE:*
-{{{
+```java
 public class SumOfPrimes1 {
 
   private Primeness primeness = new Primeness();
@@ -213,13 +211,13 @@ public class SumOfPrimes1 {
   }
   
 }
-}}}
+```
 
 *TRY IT:*
    `testability.sh -printDepth 10 com.google.test.metric.example.Lessons.SumOfPrimes1`
 
 *OUTPUT:*
-{{{
+```
 -----------------------------------------
 Packages/Classes To Enter: 
  com.google.test.metric.example.Lessons.SumOfPrimes1*
@@ -242,7 +240,7 @@ Key:
  TGC: Total Global Cost
 
 Analyzed 1 classes (plus non-whitelisted external dependencies)
-}}}
+```
 
 The testability and global state costs for the constructor (indicated by <init>)
 is zero. 
@@ -258,8 +256,7 @@ represented something expensive, like an external system, this would possess a
 testing problem as there would be no way to test `sum` method without incurring
 the cost of `isPrime`.
 
-*SOURCE:*
-{{{
+```java
 public class SumOfPrimes2 {
 
   private final Primeness primeness;
@@ -279,13 +276,13 @@ public class SumOfPrimes2 {
   }
 
 }
-}}}
+```
 
 *TRY IT:*
    `testability.sh -printDepth 10 com.google.test.metric.example.Lessons.SumOfPrimes2`
 
 *OUTPUT:*
-{{{ 
+```
 -----------------------------------------
 Packages/Classes To Enter: 
  com.google.test.metric.example.Lessons.SumOfPrimes2*
@@ -307,7 +304,7 @@ Key:
  TGC: Total Global Cost
 
 Analyzed 1 classes (plus non-whitelisted external dependencies)
-}}}
+```
 
 In this case `Primeness` is injected the into the constructor of the 
 `SumOfPrimes2`. As a result the cost of the `sum` method remains at 2, but the
@@ -322,7 +319,7 @@ through several phases:
   # Compute the cost of the method while respecting the injectability of fields, and method parameters.
 
 
-==Injectability==
+## Injectability
 
 A variable (local variable, field or a parameter) is considered injectable if it
 can be set from the outside (i.e. in the test). Any variable assigned from an
@@ -333,7 +330,7 @@ method dispatched on an injectable variable has no cost. (It can be intercepted)
 _(Caveat: The method can not be static, private, or final, as those methods can not be 
 overridden)._ 
 
-==Example: Global State==
+## Example: Global State
 
 Global state makes it hard to tests ones code as it allows cross talk between
 test. This makes it so that tests can pass by themselves but fail when run in 
@@ -341,7 +338,7 @@ a suite. It is also possible to make tests which will run in only a specific
 order.
 
 *SOURCE:*
-{{{
+```java
 package com.google.test.metric.example;
 
 public class GlobalExample {
@@ -388,14 +385,14 @@ public class GlobalExample {
     return Globals.instance.increment();
   }
 }
-}}}
+```
 
 *TRY IT:*
    `testability.sh -printDepth 10 com.google.test.metric.example.GlobalExample com.google.test.metric.example.GlobalExample`
 
 *OUTPUT:*
 
-{{{
+```
 -----------------------------------------
 Packages/Classes To Enter: 
  com.google.test.metric.example.GlobalExample*
@@ -425,21 +422,21 @@ Key:
  TGC: Total Global Cost
 
 Analyzed 3 classes (plus non-whitelisted external dependencies)
-}}}
+```
 
-===`getGlobalId()`===
+### `getGlobalId()`
 
 Method `getGlobalId()` has no global cost. This may be surprising given that
 it accesses static variables. However, upon closer examinations, these
 variables are not mutable (they are declared `final`). For this reason there
 is no global mutable state associated with this method.
 
-===`getInstance()`===
+### `getInstance()`
 
 Similarly `getInstance()` has no global cost either as it only accesses
 variables which are final.
 
-===`getGlobalCount()`===
+### `getGlobalCount()`
 
 Method `getGlobalCount()` accesses the `Globals.instance` which is a global
 constant. Accessing global constants is not a problem and hence does not 
@@ -448,10 +445,10 @@ field. Because the `Gadget`'s `this` is a global constant, all of its
 fields are global as well. The global property is transitive. Because  `count`
 is mutable (no `final` keyword) reading `count` incurs a cost.
 
-===`globalIncrement()`===
+### `globalIncrement()`
 
 Method `getGlobalIncrement()` follows the same logic as `getGlobalCount()`.
 
-==Future Enhancements / Requests==
+## Future Enhancements / Requests
 Please talk about what you want on the mailing list:
 http://groups.google.com/group/testability-metrics

@@ -60,10 +60,6 @@ import com.google.test.metric.method.op.stack.Store;
 import com.google.test.metric.method.op.stack.Swap;
 import com.google.test.metric.method.op.stack.Throw;
 import com.google.test.metric.method.op.stack.Transform;
-import java.util.Arrays;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.objectweb.asm.Handle;
 import static org.objectweb.asm.Opcodes.ASM5;
 
@@ -115,6 +111,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     }
   }
 
+  @Override
   public void visitJumpInsn(final int opcode, final Label label) {
     if (opcode == Opcodes.GOTO) {
       recorder.add(new Runnable() {
@@ -199,6 +196,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     }
   }
 
+  @Override
   public void visitTryCatchBlock(final Label start, final Label end,
       final Label handler, final String type) {
     recorder.add(new Runnable() {
@@ -217,6 +215,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     return line == null ? -1 : line;
   }
 
+  @Override
   public void visitTableSwitchInsn(int min, int max, final Label dflt,
       final Label[] labels) {
     recorder.add(new Runnable() {
@@ -232,6 +231,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
       final Label[] labels) {
     recorder.add(new Runnable() {
@@ -247,6 +247,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitLocalVariable(String name, String desc, String signature,
       Label start, Label end, int slotNum) {
     Type type = JavaType.fromDesc(desc);
@@ -260,6 +261,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     }
   }
 
+  @Override
   public void visitLineNumber(final int line, final Label start) {
     lineNumbers.put(start, line);
     recorder.add(new Runnable() { // $6
@@ -272,6 +274,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitEnd() {
     for (Runnable runnable : recorder) {
       runnable.run();
@@ -290,6 +293,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     }
   }
 
+  @Override
   public void visitTypeInsn(final int opcode, final String desc) {
     if (desc.length() == 1) {
       throw new IllegalStateException(
@@ -324,6 +328,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitVarInsn(final int opcode, final int var) {
     switch (opcode) {
       case Opcodes.ILOAD :
@@ -405,6 +410,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     return variable;
   }
 
+  @Override
   public void visitLabel(final Label label) {
     recorder.add(new Runnable() { // $11
       public void run() {
@@ -445,6 +451,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
     }
 
+  @Override
   public void visitLdcInsn(final Object cst) {
     recorder.add(new Runnable() {
       public void run() {
@@ -454,6 +461,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitInsn(final int opcode) {
     switch (opcode) {
       case Opcodes.ACONST_NULL :
@@ -836,6 +844,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitFieldInsn(final int opcode, String owner,
       final String name, final String desc) {
     owner = namer.nameClass(owner);
@@ -855,29 +864,36 @@ public class MethodVisitorBuilder extends MethodVisitor {
     }
   }
 
+  @Override
   public void visitMethodInsn(final int opcode, final String clazz,
       final String name, final String desc) {
       visitMethodInsn(opcode, clazz, name, desc, false);
   }
 
+  @Override
   public AnnotationVisitor visitAnnotation(String arg0, boolean arg1) {
     return null;
   }
 
+  @Override
   public AnnotationVisitor visitAnnotationDefault() {
     return null;
   }
 
+  @Override
   public void visitAttribute(Attribute arg0) {
   }
 
+  @Override
   public void visitCode() {
   }
 
+  @Override
   public void visitFrame(int arg0, int arg1, Object[] arg2, int arg3,
       Object[] arg4) {
   }
 
+  @Override
   public void visitIincInsn(final int var, final int increment) {
     recorder.add(new Runnable() {
       public void run() {
@@ -887,6 +903,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitIntInsn(int opcode, int operand) {
     switch (opcode) {
       case Opcodes.NEWARRAY :
@@ -935,9 +952,11 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public void visitMaxs(int maxStack, int maxLocals) {
   }
 
+  @Override
   public void visitMultiANewArrayInsn(final String clazz, final int dims) {
     recorder.add(new Runnable() {
       public void run() {
@@ -947,6 +966,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
     });
   }
 
+  @Override
   public AnnotationVisitor visitParameterAnnotation(int arg0, String arg1,
       boolean arg2) {
     return null;
@@ -973,6 +993,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
       this.isStatic = isStatic;
     }
 
+    @Override
     public void run() {
       FieldInfo field = null;
       ClassInfo ownerClass = repository.getClass(fieldOwner);
@@ -1004,6 +1025,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
       this.isStatic = isStatic;
     }
 
+    @Override
     public void run() {
       FieldInfo field = null;
       ClassInfo ownerClass = repository.getClass(fieldOwner);

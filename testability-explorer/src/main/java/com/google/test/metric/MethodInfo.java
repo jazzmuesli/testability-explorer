@@ -15,7 +15,7 @@
  */
 package com.google.test.metric;
 
-import com.google.common.base.Nullable;
+
 import com.google.common.base.Predicate;
 import static com.google.common.collect.Iterables.filter;
 import com.google.common.collect.Lists;
@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import static java.util.Collections.unmodifiableList;
 import java.util.List;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class MethodInfo implements Comparable<MethodInfo> {
 

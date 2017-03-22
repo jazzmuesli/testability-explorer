@@ -75,4 +75,8 @@ public class Variable {
     return String.format("%s %s", typeSimpleName, getName());
   }
 
+public boolean isReferenceToThis() {
+	return this.getName().equals("this");
+}
+
 }

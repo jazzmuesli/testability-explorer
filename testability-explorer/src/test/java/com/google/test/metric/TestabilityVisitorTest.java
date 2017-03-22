@@ -165,6 +165,31 @@ public class TestabilityVisitorTest extends TestCase {
     assertEquals(2, frame.getLoDCount(clazz.getField("plus2")));
   }
 
+  private static class LoDSameInvocationInline {
+	  
+	  public Obj returnSomething() {
+		  return new Obj();
+	  }
+	  
+	  public void execute(Integer a) {
+		  Obj o = returnSomething();
+		  if(o.getValueA()!=null || o.getValueB()!=null) {
+			  int i;
+		  }
+	  }
+  }
+  
+  public void testLoDSameInvocationInline() throws Exception {
+	  ClassInfo clazz = repo.getClass(LoDSameInvocationInline.class.getCanonicalName());
+	  MethodInfo methodInfo = clazz.getMethod(method("execute", Integer.class));
+	  CostRecordingFrame frame = visitor.createFrame(methodInfo, 1);
+	  frame.applyMethodOperations();
+	  
+		MethodCost methodCost = frame.getMethodCost();
+		List<LoDViolation> costSources = filterLoD(methodCost.getViolationCosts());
+		assertEquals(0, costSources.size());
+  }
+
   private static class LoDMultipleDifferentInvocations {
     Obj plus2;
     public void execute(Obj plus0) {

@@ -74,6 +74,7 @@ public class TestabilityVisitor {
       super.addLoDCost(lineNumber, method, distance);
       SourceLocation location = new SourceLocation(this.method.getClassInfo().getFileName(),
           lineNumber);
+      
       ViolationCost cost = new LoDViolation(location, method.getName(),
           Cost.lod(distance), distance);
       methodCost.addCostSource(cost);
@@ -196,9 +197,11 @@ public class TestabilityVisitor {
     @Override
     protected void incrementLoD(int lineNumber, MethodInfo toMethod,
         Variable destination, Variable source, ParentFrame destinationFrame) {
+    	
       if (source != null) {
         int thisCount = variableState.getLoDCount(destination);
-        int distance = thisCount + 1;
+        boolean isThisInvocation = destination!=null && destination.isReferenceToThis();
+        int distance = isThisInvocation ? 0 : thisCount + 1;
         destinationFrame.variableState.setLoDCount(source, distance);
         if (distance > 1) {
           destinationFrame.addLoDCost(lineNumber, toMethod, distance);
@@ -301,6 +304,7 @@ public class TestabilityVisitor {
 
     void assignVariable(Variable destination, int lineNumber,
         ParentFrame sourceFrame, Variable source) {
+    	
       if (sourceFrame.variableState.isInjectable(source)) {
         variableState.setInjectable(destination);
       }
@@ -368,17 +372,21 @@ public class TestabilityVisitor {
     public void recordMethodCall(String clazzName, int lineNumber,
         String methodName, Variable methodThis, List<Variable> parameters,
         Variable returnVariable) {
+    	
       try {
         if (whitelist != null && whitelist.isClassWhiteListed(clazzName)) {
           return;
         }
+        
         MethodInfo toMethod = classRepository.getClass(clazzName).getMethod(
             methodName);
+        
         if (alreadyVisited.contains(toMethod)) {
           // Method already counted, skip (to prevent recursion)
           incrementLoD(lineNumber, toMethod, methodThis, returnVariable, parentFrame);
         } else if (toMethod.canOverride()
             && variableState.isInjectable(methodThis)) {
+        	
           // Method can be overridden / injectable
           recordOverridableMethodCall(lineNumber, toMethod, methodThis,
               returnVariable);
@@ -415,6 +423,7 @@ public class TestabilityVisitor {
         MethodInfo toMethod, Variable methodThis, Variable returnVariable) {
       if (returnVariable != null) {
         variableState.setInjectable(returnVariable);
+        
         setReturnValue(returnVariable);
       }
       incrementLoD(lineNumber, toMethod, methodThis, returnVariable, this);

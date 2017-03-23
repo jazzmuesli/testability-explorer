@@ -32,6 +32,7 @@ import com.google.test.metric.report.chart.Histogram;
 import com.google.test.metric.report.chart.HistogramChartUrl;
 import com.google.test.metric.report.chart.PieChartUrl;
 import com.google.test.metric.report.chart.Histogram.Linear;
+import com.google.test.metric.report.chart.HistogramChartData;
 
 public class GradeCategories {
   private static final int MAX_HISTOGRAM_BINS = 30;
@@ -109,6 +110,22 @@ public class GradeCategories {
     chart.setYMark(0, model.getOverallHistogram().getMaxBin(), scalingFunction);
     chart.setSize(width, height);
     chart.setBarWidth((width - HISTOGRAM_LEGEND_WIDTH) / model.getBinCount(), 0, 0);
+    chart.setChartLabel("Excellent", "Good", "Needs Work");
+    chart.setColors(GREEN, YELLOW, RED);
+    return chart;
+  }
+  
+  public HistogramChartData createHistogramData(List<Integer> costs,
+                                           Function<Integer, Double> scalingFunction) {
+    int maxScale = 61;
+    MultiHistogramDataModel model = buildHistogramDataModel(costs, scalingFunction);
+    int[] excellent = model.getExcellent().getScaledBinRange(0, MAX_VALUE, maxScale);
+    int[] good = model.getGood().getScaledBinRange(0, MAX_VALUE, maxScale);
+    int[] needsWork = model.getNeedsWork().getScaledBinRange(0, MAX_VALUE, maxScale);
+    HistogramChartData chart = new HistogramChartData();
+    chart.setItemLabel(model.getOverallHistogram().getBinLabels(20));
+    chart.setValues(excellent, good, needsWork);
+    
     chart.setChartLabel("Excellent", "Good", "Needs Work");
     chart.setColors(GREEN, YELLOW, RED);
     return chart;

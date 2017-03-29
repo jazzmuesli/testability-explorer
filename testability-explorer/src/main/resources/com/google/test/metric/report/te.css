@@ -2,6 +2,16 @@ body {
   font-family: sans-serif;
 }
 
+.green{
+    color: #00AA00;
+}
+yellow{
+    color: #FFFF00;
+}
+red{
+    color: #D22222;
+}
+
 #timestamp {
   color: #666;
   font-style: italic;
@@ -16,22 +26,21 @@ body {
   background: #ffd;
   padding: 8px;
   margin-left: 16px;
-  float: left;"
+  float: left;
 }
 
 .overview_table th {
-  font-weight: normal;
-  padding-bottom: 4px;
+  padding-bottom: .5px;
 }
 .overview_table td {
   font-style: italic;
 }
 .percent {
-  padding-left: 8px;
+  padding-left: 1em;
   text-align: right;
 }
 .overview_table .value {
-  padding-left: 8px;
+  padding-left: 1em;
   text-align: right;
 }
 

@@ -17,9 +17,9 @@ package com.google.test.metric.report.issues;
 
 import java.util.Comparator;
 
-import com.google.common.base.Nullable;
 import com.google.common.base.Predicate;
 import com.google.test.metric.SourceLocation;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A model of a single reportable issue with the class under analysis.

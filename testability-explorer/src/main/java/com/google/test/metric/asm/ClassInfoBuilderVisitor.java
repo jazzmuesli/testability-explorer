@@ -24,14 +24,16 @@ import org.objectweb.asm.Opcodes;
 
 import com.google.test.metric.ClassInfo;
 import com.google.test.metric.JavaClassRepository;
+import static org.objectweb.asm.Opcodes.ASM5;
 
 public class ClassInfoBuilderVisitor extends NoopClassVisitor {
 
   private final JavaClassRepository repository;
   private ClassInfo classInfo;
-  private JavaNamer namer = new JavaNamer();
+  private final JavaNamer namer = new JavaNamer();
 
   public ClassInfoBuilderVisitor(JavaClassRepository repository) {
+      super(ASM5);
     this.repository = repository;
   }
 
@@ -41,13 +43,15 @@ public class ClassInfoBuilderVisitor extends NoopClassVisitor {
     ClassInfo superClass = null;
     superClass = superName == null ? null : repository.getClass(namer.nameClass(superName));
 
-    List<ClassInfo> interfaceList = new ArrayList<ClassInfo>();
+    List<ClassInfo> interfaceList = new ArrayList<>();
     for (String interfaze : interfaces) {
       interfaceList.add(repository.getClass(namer.nameClass(interfaze)));
     }
     boolean isInterface = (access & Opcodes.ACC_INTERFACE) == Opcodes.ACC_INTERFACE;
-    classInfo = new ClassInfo(namer.nameClass(name), isInterface, superClass,
-        interfaceList, guessSourceFileName(name));
+    final String namedClass = namer.nameClass(name);
+    final String guessedSource = guessSourceFileName(name);
+    classInfo = new ClassInfo(namedClass, isInterface, superClass,
+        interfaceList, guessedSource);
     repository.addClass(classInfo);
   }
 

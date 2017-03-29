@@ -21,7 +21,11 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
-public class NoopClassVisitor implements ClassVisitor {
+public class NoopClassVisitor extends ClassVisitor {
+
+    public NoopClassVisitor(int i) {
+        super(i);
+    }
 
   public void visit(int version, int access, String name, String signature,
       String superName, String[] interfaces) {

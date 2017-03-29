@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.google.common.base.Nullable;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Data model for the issues we want to explain in a class.

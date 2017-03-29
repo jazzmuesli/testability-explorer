@@ -19,10 +19,10 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
 
-public class NoopFieldVisitor implements FieldVisitor {
+public class NoopFieldVisitor extends FieldVisitor {
 
-  public NoopFieldVisitor() {
-    super();
+  public NoopFieldVisitor(int version) {
+    super(version);
   }
 
   public AnnotationVisitor visitAnnotation(String desc, boolean visible) {

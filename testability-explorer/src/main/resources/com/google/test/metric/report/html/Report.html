@@ -8,8 +8,72 @@
   <style type="text/css">
     <#include "../te.css"/>
   </style>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
     <#include "report.js"/>
+    
+    google.charts.load("current", {packages:["corechart", "bar", "gauge"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Task', 'Hours per Day'],
+        ['Excellent',     ${excellentCount}],
+        ['Good',      ${goodCount}],
+        ['Needs Work',  ${needsWorkCount}]
+      ]);
+      
+      var GREEN = '#00AA00';
+      var YELLOW = '#FFFF00';
+      var RED = '#D22222';
+
+      var options = {
+        title: 'Testability Distribution',
+        is3D: true,
+        slices: {
+          0: { color: GREEN },//green
+          1: { color: YELLOW },//yellow
+          2: { color: RED}//red
+        }
+      };
+      
+      var overalldata = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Weighted Testability', ${gaugePointer}]
+        ]);
+      var overalloptions = {
+          width: 400, height: 120,
+          redFrom: 75, redTo: 100,
+          yellowFrom:50, yellowTo: 75,
+          greenFrom:0, greenTo: 50,
+          minorTicks: 5
+        };
+      
+      var columndata = google.visualization.arrayToDataTable([
+         ['Element', 'Excellent', { role: 'style' }, 'Good', { role: 'style' }, 'Needs Work', { role: 'style' }],
+         ${columnData}
+      ]);
+      var columnoptions = {
+        title: "Not sure what this chart means.",
+        width: 700,
+        height: 200,
+        bar: {groupWidth: "75%"},
+        legend: { position: "none" },
+        isStacked: true,
+        vAxis: {
+          minValue: 0,
+          logScale: true
+        }
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+      chart.draw(data, options);
+      
+      var gauge = new google.visualization.Gauge(document.getElementById('gauge'));
+      gauge.draw(overalldata, overalloptions);
+      
+      var columnchart = new google.visualization.ColumnChart(document.getElementById('histogram'));
+      columnchart.draw(columndata, columnoptions);
+    }
   </script>
 </head>
 <body>
@@ -22,12 +86,8 @@
 <div style="margin-top: 32px;">
   <div style="padding-bottom: 24px; font-weight: bold; font-size: 120%">Overall score:
          <span style="font-weight: normal">${overall}</span></div>
-  <div style="float: left;">
-    ${pieChart}
-  </div>
-  <div style="float: left;">
-    ${overallChart}
-  </div>
+  <div style="float: left" id="piechart_3d"></div>
+  <div style="float: left;" id="gauge"></div>
   <div class="overview">
     <#if total gt 0>
       <table class="overview_table">
@@ -59,10 +119,20 @@
   </div>
 
   <div style="clear:both; width: 0">&nbsp;</div>
+  <div id="histogram"></div>
 </div>
-
-<div style="margin-bottom: 32px; margin-left: 32px; margin-top: 16px;">
-  ${histogram}
+<div>
+    <h2>Old Charts</h2>
+    <div style="float: left;">
+        ${pieChart}
+    </div>
+    <div style="float: left;">
+        ${overallChart}
+    </div>
+    <div style="clear:both; width: 0">&nbsp;</div>
+    <div style="margin-bottom: 32px; margin-left: 32px; margin-top: 16px;">
+      ${histogram}
+    </div>
 </div>
 
 <h2 style="margin-bottom: 12px;">Issues that cause the most untestable classes</h2>
@@ -96,6 +166,6 @@
   </div>
 </#list>
 <div class="copyright">
-  <a href="http://testabilityexplorer.org">http://testabilityexplorer.org</a></div>
+  <a href="http://testabilityexplorer.org">Testability Explorer</a></div>
 </body>
 </html>

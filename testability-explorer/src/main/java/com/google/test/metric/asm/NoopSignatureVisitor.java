@@ -15,19 +15,24 @@
  */
 package com.google.test.metric.asm;
 
+import static org.objectweb.asm.Opcodes.ASM5;
 import org.objectweb.asm.signature.SignatureVisitor;
 
-public class NoopSignatureVisitor implements SignatureVisitor {
+public class NoopSignatureVisitor extends SignatureVisitor {
+
+    public NoopSignatureVisitor(int i) {
+        super(i);
+    }
 
   public SignatureVisitor visitArrayType() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public void visitBaseType(char descriptor) {
   }
 
   public SignatureVisitor visitClassBound() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public void visitClassType(String name) {
@@ -37,7 +42,7 @@ public class NoopSignatureVisitor implements SignatureVisitor {
   }
 
   public SignatureVisitor visitExceptionType() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public void visitFormalTypeParameter(String name) {
@@ -47,30 +52,30 @@ public class NoopSignatureVisitor implements SignatureVisitor {
   }
 
   public SignatureVisitor visitInterface() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public SignatureVisitor visitInterfaceBound() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public SignatureVisitor visitParameterType() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public SignatureVisitor visitReturnType() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public SignatureVisitor visitSuperclass() {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public void visitTypeArgument() {
   }
 
   public SignatureVisitor visitTypeArgument(char wildcard) {
-    return new NoopSignatureVisitor();
+    return new NoopSignatureVisitor(ASM5);
   }
 
   public void visitTypeVariable(String name) {

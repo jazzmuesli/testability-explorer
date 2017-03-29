@@ -15,6 +15,7 @@
  */
 package com.google.test.metric.report.html;
 
+import com.google.common.base.Function;
 import static com.google.test.metric.report.chart.GoogleChartAPI.GREEN;
 import static com.google.test.metric.report.chart.GoogleChartAPI.RED;
 import static com.google.test.metric.report.chart.GoogleChartAPI.YELLOW;
@@ -26,13 +27,16 @@ import com.google.test.metric.AnalysisModel;
 import com.google.test.metric.ClassCost;
 import com.google.test.metric.CostModel;
 import com.google.test.metric.report.GradeCategories;
+import com.google.test.metric.report.MultiHistogramDataModel;
 import com.google.test.metric.report.ReportOptions;
 import com.google.test.metric.report.SummaryReportModel;
 import com.google.test.metric.report.chart.GoodnessChart;
 import com.google.test.metric.report.chart.HistogramChartUrl;
 import com.google.test.metric.report.chart.PieChartUrl;
 import com.google.test.metric.report.chart.Histogram.Logarithmic;
+import com.google.test.metric.report.chart.HistogramChartData;
 import com.google.test.metric.report.issues.ClassIssues;
+import static java.lang.Integer.MAX_VALUE;
 
 /**
  * This model provides the data that backs the HTML report.
@@ -73,6 +77,27 @@ public class HtmlReportModel extends SummaryReportModel {
     chart.setSize(200, 100);
     chart.setUnscaledValues(getOverall());
     return chart.getHtml();
+  }
+  
+  public String getGaugePointer(){
+      GoodnessChart chart = new GoodnessChart(maxExcellentCost,
+        maxAcceptableCost, 10 * maxAcceptableCost, 100 * maxAcceptableCost);
+      chart.setUnscaledValues(getOverall());
+      final String chd = chart.getMap().get("chd");
+      if(chd==null || chd.indexOf(':')==-1){
+          return "0";
+      }else{
+          final int idx = chd.indexOf(':');
+          return chd.substring(idx+1);
+      }
+  }
+  
+  public String getColumnData(){
+      GradeCategories gradeCategories = new GradeCategories(maxExcellentCost, maxAcceptableCost);
+      Function<Integer, Double> scalingFunction = new Logarithmic();
+      final HistogramChartData data = gradeCategories.createHistogramData(costs, scalingFunction);
+      final String html = data.getHtml();
+      return html;
   }
 
   public String getPieChart() {

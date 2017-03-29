@@ -21,7 +21,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import com.google.common.base.Function;
-import com.google.common.base.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Histogram {
 

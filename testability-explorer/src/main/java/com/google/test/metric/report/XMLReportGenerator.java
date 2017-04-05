@@ -15,6 +15,7 @@
  */
 package com.google.test.metric.report;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -30,14 +31,17 @@ import com.google.test.metric.ViolationCost;
 
 public class XMLReportGenerator extends SummaryReportModel implements ReportGenerator {
 
-  private final ContentHandler out;
+private final ContentHandler out;
   private final CostModel costModel;
   public static final String CLASS_NODE = "class";
+  public static final String CLASSES_ROOT = "classes";
   public static final String CLASS_NAME_ATTRIBUTE = ClassCost.CLASS_NAME;
   public static final String CLASS_COST_ATTRIBUTE = "cost";
   public static final String METHOD_NODE = "method";
   public static final String METHOD_NAME_ATTRIBUTE = MethodCost.METHOD_NAME_ATTRIBUTE;
   public static final String METHOD_OVERALL_COST_ATTRIBUTE = "overall";
+  public static final String METHODS_ROOT = "methods";
+  public static final String COSTS_ROOT = "costs";
 
   public XMLReportGenerator(ContentHandler out, CostModel costModel, int maxExcellentCost,
       int maxAcceptableCost, int worstOffenderCount) {
@@ -63,9 +67,13 @@ public class XMLReportGenerator extends SummaryReportModel implements ReportGene
       values.put("good", goodCount);
       values.put("needsWork", needsWorkCount);
       startElement("testability", values);
+      
+      startElement(CLASSES_ROOT, Collections.emptyMap());
       for (ClassCost classCost : worstOffenders) {
         writeCost(classCost);
       }
+      endElement(CLASSES_ROOT);
+      
       endElement("testability");
       out.endDocument();
     } catch (SAXException e) {
@@ -102,20 +110,29 @@ public class XMLReportGenerator extends SummaryReportModel implements ReportGene
   void writeCost(MethodCost methodCost) throws SAXException {
     Map<String, Object> attributes = methodCost.getAttributes();
     attributes.put(METHOD_OVERALL_COST_ATTRIBUTE, costModel.computeOverall(methodCost.getTotalCost()));
+    
     startElement(METHOD_NODE, attributes);
+    
+    startElement(COSTS_ROOT, Collections.emptyMap());
     for (ViolationCost violation : methodCost.getViolationCosts()) {
       writeCost(violation);
     }
+    endElement(COSTS_ROOT);
+    
     endElement(METHOD_NODE);
   }
 
   void writeCost(ClassCost classCost) throws SAXException {
     Map<String, Object> attributes = classCost.getAttributes();
     attributes.put(CLASS_COST_ATTRIBUTE, costModel.computeClass(classCost));
+    
     startElement(CLASS_NODE, attributes);
+    
+    startElement(METHODS_ROOT, Collections.emptyMap());
     for (MethodCost cost : classCost.getMethods()) {
       writeCost(cost);
     }
+    endElement(METHODS_ROOT);
     endElement(CLASS_NODE);
   }
 

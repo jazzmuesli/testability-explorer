@@ -29,7 +29,7 @@ import com.google.test.metric.CostModel;
 import com.google.test.metric.MethodCost;
 import com.google.test.metric.ViolationCost;
 
-public class XMLReportGenerator extends SummaryReportModel implements ReportGenerator {
+public class XMLReportGenerator extends FullReportModel implements ReportGenerator {
 
 private final ContentHandler out;
   private final CostModel costModel;
@@ -69,7 +69,7 @@ private final ContentHandler out;
       startElement("testability", values);
       
       startElement(CLASSES_ROOT, Collections.emptyMap());
-      for (ClassCost classCost : worstOffenders) {
+      for (ClassCost classCost : getClassesToPrint()) {
         writeCost(classCost);
       }
       endElement(CLASSES_ROOT);

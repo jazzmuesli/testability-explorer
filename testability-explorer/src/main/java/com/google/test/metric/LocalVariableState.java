@@ -25,6 +25,7 @@ public class LocalVariableState extends VariableState {
   private final VariableState globalVariables;
 
   public LocalVariableState(VariableState globals) {
+	  
     this.globalVariables = globals;
   }
 
@@ -83,6 +84,7 @@ public class LocalVariableState extends VariableState {
   }
 
   void setLoDCount(Variable value, int newCount) {
+	  
     Integer count = lodCount.get(value);
     int intCount = count == null ? 0 : count;
     if (intCount < newCount) {

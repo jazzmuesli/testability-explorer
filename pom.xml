@@ -20,9 +20,12 @@
   </scm>
   <modules>
     <module>testability-explorer</module>
+
+<!-- not for now
     <module>ant-task</module>
     <module>maven-testability-plugin</module>
     <module>eclipse-plugin</module>
+-->
     <!--
     These modules aren't finished yet.
     <module>javascript</module>

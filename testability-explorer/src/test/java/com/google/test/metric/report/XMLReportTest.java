@@ -108,7 +108,7 @@ public class XMLReportTest extends TestCase {
     methodCost.link();
     report.writeCost(methodCost);
     assertXMLEquals("<method cyclomatic=\"2\" global=\"2\" line=\"123\" "
-        + "lod=\"0\" name=\"methodName\" overall=\"22\">L123,L234,L345,L456,</method>");
+        + "lod=\"0\" name=\"methodName\" overall=\"22\"><costs>L123,L234,L345,L456,</costs></method>");
   }
 
   public void testPrintClassCost() throws Exception {
@@ -127,7 +127,7 @@ public class XMLReportTest extends TestCase {
     m2.link();
     ClassCost classCost = new ClassCost("className", asList(m1, m2));
     report.writeCost(classCost);
-    assertXMLEquals("<class class=\"className\" cost=\"1\">M1()M2()</class>");
+    assertXMLEquals("<class class=\"className\" cost=\"1\"><methods>M1()M2()</methods></class>");
   }
 
   public void testWholeDocument() throws Exception {
@@ -148,7 +148,7 @@ public class XMLReportTest extends TestCase {
     report.addClassCost(c2);
     report.printFooter();
     assertXMLEquals("<testability excellent=\"0\" good=\"0\" " +
-    		"needsWork=\"2\" overall=\"2\">C1;C2;</testability>");
+    		"needsWork=\"2\" overall=\"2\">\n    <classes>C1;C2;</classes>\n</testability>");
   }
 
 }

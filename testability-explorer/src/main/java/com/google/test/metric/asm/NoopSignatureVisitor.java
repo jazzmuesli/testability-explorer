@@ -15,7 +15,6 @@
  */
 package com.google.test.metric.asm;
 
-import static org.objectweb.asm.Opcodes.ASM5;
 import org.objectweb.asm.signature.SignatureVisitor;
 
 public class NoopSignatureVisitor extends SignatureVisitor {
@@ -25,14 +24,14 @@ public class NoopSignatureVisitor extends SignatureVisitor {
     }
 
   public SignatureVisitor visitArrayType() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public void visitBaseType(char descriptor) {
   }
 
   public SignatureVisitor visitClassBound() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public void visitClassType(String name) {
@@ -42,7 +41,7 @@ public class NoopSignatureVisitor extends SignatureVisitor {
   }
 
   public SignatureVisitor visitExceptionType() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public void visitFormalTypeParameter(String name) {
@@ -52,30 +51,30 @@ public class NoopSignatureVisitor extends SignatureVisitor {
   }
 
   public SignatureVisitor visitInterface() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public SignatureVisitor visitInterfaceBound() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public SignatureVisitor visitParameterType() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public SignatureVisitor visitReturnType() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public SignatureVisitor visitSuperclass() {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public void visitTypeArgument() {
   }
 
   public SignatureVisitor visitTypeArgument(char wildcard) {
-    return new NoopSignatureVisitor(ASM5);
+    return new NoopSignatureVisitor(ASMVersionHelper.getVersion());
   }
 
   public void visitTypeVariable(String name) {

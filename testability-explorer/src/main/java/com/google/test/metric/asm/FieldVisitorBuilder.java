@@ -22,13 +22,12 @@ import com.google.test.metric.FieldInfo;
 import com.google.test.metric.JavaType;
 import com.google.test.metric.Type;
 import com.google.test.metric.Visibility;
-import static org.objectweb.asm.Opcodes.ASM5;
 
 public class FieldVisitorBuilder extends NoopFieldVisitor {
 
     public FieldVisitorBuilder(ClassInfo classInfo, int access, String name,
             String desc, String signature, Object value) {
-        super(ASM5);
+        super(ASMVersionHelper.getVersion());
         boolean isStatic = (access & Opcodes.ACC_STATIC) == Opcodes.ACC_STATIC;
         boolean isPrivate = JavaVisibility.valueFromJavaBytecode(access) == Visibility.PRIVATE;
         boolean isFinal = (access & Opcodes.ACC_FINAL) == Opcodes.ACC_FINAL;

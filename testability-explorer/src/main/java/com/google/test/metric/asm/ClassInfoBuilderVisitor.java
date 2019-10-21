@@ -24,7 +24,7 @@ import org.objectweb.asm.Opcodes;
 
 import com.google.test.metric.ClassInfo;
 import com.google.test.metric.JavaClassRepository;
-import static org.objectweb.asm.Opcodes.ASM5;
+
 
 public class ClassInfoBuilderVisitor extends NoopClassVisitor {
 
@@ -33,7 +33,7 @@ public class ClassInfoBuilderVisitor extends NoopClassVisitor {
   private final JavaNamer namer = new JavaNamer();
 
   public ClassInfoBuilderVisitor(JavaClassRepository repository) {
-      super(ASM5);
+      super(ASMVersionHelper.getVersion());
     this.repository = repository;
   }
 

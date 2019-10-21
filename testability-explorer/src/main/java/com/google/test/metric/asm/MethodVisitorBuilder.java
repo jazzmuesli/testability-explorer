@@ -87,7 +87,7 @@ public class MethodVisitorBuilder extends MethodVisitor {
   public MethodVisitorBuilder(ClassRepository repository, ClassInfo classInfo,
       String name, String desc, String signature, String[] exceptions,
       boolean isStatic, boolean isFinal, Visibility visibility) {
-      super(ASM5);
+      super(ASMVersionHelper.getVersion());
     this.repository = repository;
     this.classInfo = classInfo;
     this.name = name;

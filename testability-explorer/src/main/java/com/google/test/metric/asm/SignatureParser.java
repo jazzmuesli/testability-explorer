@@ -23,7 +23,6 @@ import org.objectweb.asm.signature.SignatureVisitor;
 
 import com.google.test.metric.JavaType;
 import com.google.test.metric.Type;
-import static org.objectweb.asm.Opcodes.ASM5;
 
 public class SignatureParser extends NoopSignatureVisitor {
 
@@ -39,7 +38,7 @@ public class SignatureParser extends NoopSignatureVisitor {
     private final Setter setter;
 
     public TypeVisitor(Setter setter) {
-        super(ASM5);
+        super(ASMVersionHelper.getVersion());
       this.setter = setter;
     }
 
@@ -109,7 +108,7 @@ public class SignatureParser extends NoopSignatureVisitor {
   }
 
   public static SignatureParser parse(String signature) {
-    SignatureParser parser = new SignatureParser(ASM5);
+    SignatureParser parser = new SignatureParser(ASMVersionHelper.getVersion());
     new SignatureReader(signature).accept(parser);
     return parser;
   }

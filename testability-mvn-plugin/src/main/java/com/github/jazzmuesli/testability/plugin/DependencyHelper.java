@@ -30,7 +30,7 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
  */
 public class DependencyHelper {
 
-	private static final String PLUGIN_NAME = "com.github.jazzmuesli:testability-mvn-plugin";
+	private static final String PLUGIN_NAME = "com.google.testability-explorer:testability-mvn-plugin";
 
 	private static Set<Artifact> getDevArtifacts(ArtifactRepository localRepository, RepositorySystem repositorySystem,
 			Map<String, Artifact> pluginArtifactMap) {

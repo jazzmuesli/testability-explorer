@@ -20,9 +20,10 @@
   </scm>
   <modules>
     <module>testability-explorer</module>
-
+    <module>testability-mvn-plugin</module>
 <!-- not for now
     <module>ant-task</module>
+Yes, I migrated this one to latest maven plugin API.
     <module>maven-testability-plugin</module>
     <module>eclipse-plugin</module>
 -->

@@ -175,35 +175,32 @@ public class DependencyHelper {
 	 */
 	static LinkedHashSet<String> generateClasspath(MavenProject project, Log log) {
 		LinkedHashSet<String> classpath = new LinkedHashSet<>();
-		InvocationRequest request = new DefaultInvocationRequest();
-		request.setPomFile( project.getFile() );
-		request.setGoals( Collections.singletonList( "dependency:build-classpath" ) );
-		Properties properties = new Properties();
-		
-		String fileName = "cpdep.txt";
-		new File(fileName).delete();
-		properties.setProperty("mdep.outputFile", fileName);
-		request.setProperties(properties);
+		try {
+			InvocationRequest request = new DefaultInvocationRequest();
+			request.setPomFile(project.getFile());
+			request.setGoals(Collections.singletonList("dependency:build-classpath"));
+			Properties properties = new Properties();
 
-		Invoker invoker = new DefaultInvoker();
+			String fileName = project.getBasedir().getAbsolutePath()+File.separator+"cpdep.txt";
+			new File(fileName).delete();
+			properties.setProperty("mdep.outputFile", fileName);
+			request.setProperties(properties);
 
-		try
-		{
-		  InvocationResult res = invoker.execute( request );
-		  log.info("result: " + res);
-		  BufferedReader fr = new BufferedReader(new FileReader(fileName));
-		  List<String> lines = fr.lines().collect(Collectors.toList());
-		  for (String line : lines) {
-			  classpath.addAll(Arrays.asList(line.split(File.pathSeparator)));
-		  }
-		  log.info("cp: " + classpath);
-		  fr.close();
+			Invoker invoker = new DefaultInvoker();
+
+			InvocationResult res = invoker.execute(request);
+			log.info("result: " + res);
+			BufferedReader fr = new BufferedReader(new FileReader(fileName));
+			List<String> lines = fr.lines().collect(Collectors.toList());
+			for (String line : lines) {
+				classpath.addAll(Arrays.asList(line.split(File.pathSeparator)));
+			}
+			log.info("cp: " + classpath);
+			fr.close();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
-		catch (Exception e)
-		{
-		  log.error(e.getMessage(), e);
-		}
-		  return classpath;
+		return classpath;
 	}
 
 	/**
